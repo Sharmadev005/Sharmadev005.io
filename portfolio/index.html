@@ -1,0 +1,1021 @@
+<!--https://github.com/Sharmadev005/Sharmadev005.io.git-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEV_SHARMA</title>
+    <link rel="icon" href="Dev.jpg" type="image/x-icon">
+    
+    <style>
+        :root {
+            --bg-color: #020205;
+            --card-bg: rgba(20, 30, 40, 0.6);
+            --neon-cyan: #00f3ff;
+            --neon-blue: #0066ff;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --font-tech: 'Share Tech Mono', monospace;
+            --font-body: 'Rajdhani', sans-serif;
+            --section-spacing: 100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+        }
+
+        canvas#network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at center, #0a0a14 0%, #000000 100%);
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-tech);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2.section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        h2.section-title::before {
+            content: '//';
+            margin-right: 10px;
+            color: var(--neon-blue);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .holo-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .holo-card:hover {
+            border-color: rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        
+        .holo-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: rgba(0, 243, 255, 0.2);
+            opacity: 0.3;
+            animation: scanline 6s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        .hidden-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+        .visible-section {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 2, 5, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-family: var(--font-tech);
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .nav-links ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-family: var(--font-tech);
+            font-size: 0.9rem;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--neon-cyan);
+        }
+        
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-content span.highlight {
+            color: var(--neon-cyan);
+        }
+
+        .hero-content p.subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            /*font-family: var(--font-tech);*/
+            font-family: Cascadia Code, monospace;
+            color: rgb(232, 241, 231);
+        }
+
+        .model-wrapper {
+            perspective: 1000px;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--neon-blue);
+            background: rgba(0, 243, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-tech);
+            color: var(--neon-cyan);
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
+        .face-front  { transform: rotateY(0deg) translateZ(100px); }
+        .face-back   { transform: rotateY(180deg) translateZ(100px); }
+        .face-right  { transform: rotateY(90deg) translateZ(100px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(100px); }
+        .face-top    { transform: rotateX(90deg) translateZ(100px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        @keyframes rotateCube {
+            from { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            to { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
+        }
+        
+        section {
+            padding: var(--section-spacing) 0;
+        }
+        
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; }
+      
+        .timeline-item {
+            border-left: 2px solid var(--neon-blue);
+            padding-left: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -7px; top: 5px;
+            width: 12px; height: 12px; background: var(--neon-cyan); border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+        .timeline-date { font-family: var(--font-tech); color: var(--neon-cyan); margin-bottom: 5px; display: block; }
+
+        .skill-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .tech-tag {
+            padding: 5px 15px;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-cyan);
+            font-family: var(--font-tech);
+            font-size: 0.8rem;
+            border-radius: 20px;
+        }
+
+        .cert-card { text-align: center; }
+        .cert-card h3 { color: var(--neon-cyan); margin-bottom: 10px; }
+        .cert-img { width: 100%; max-width: 300px; border-radius: 10px; box-shadow: 0 0 15px var(--neon-cyan); }
+       
+        .contact-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--neon-blue);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+        }
+        .btn-tech {
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-family: var(--font-tech);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            width: fit-content;
+        }
+        .btn-tech:hover { background: var(--neon-cyan); color: var(--bg-color); box-shadow: 0 0 20px var(--neon-cyan); }
+
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            margin-top: 100px;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            font-family: var(--font-tech);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+            .hero-content h1 { font-size: 2.8rem; }
+            #hero { flex-direction: column-reverse; text-align: center; gap: 50px; justify-content: center;}
+            .model-wrapper { width: 200px; height: 200px; }
+            .cube { width: 150px; height: 150px; }
+            .cube-face { width: 150px; height: 150px; }
+            .face-front { transform: rotateY(0deg) translateZ(75px); }
+            .face-back { transform: rotateY(180deg) translateZ(75px); }
+            .face-right { transform: rotateY(90deg) translateZ(75px); }
+            .face-left { transform: rotateY(-90deg) translateZ(75px); }
+            .face-top { transform: rotateX(90deg) translateZ(75px); }
+            .face-bottom { transform: rotateX(-90deg) translateZ(75px); }
+        }
+
+        /* --- SLIDER STYLES --- */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            gap: 20px;
+        }
+
+        .slider-track .cert-card {
+            min-width: 100%; 
+            flex-shrink: 0;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            font-size: 2rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            font-family: var(--font-tech);
+        }
+
+        .slider-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+
+        @media (min-width: 768px) {
+            .slider-track .cert-card {
+                min-width: calc(50% - 10px); 
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .slider-track .cert-card {
+                min-width: calc(33.333% - 14px); 
+            }
+        }
+
+      
+        .slider-track .cert-card:hover {
+            transform: translateY(-15px); 
+            box-shadow: 0 15px 30px rgba(0, 243, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000;
+            padding-top: 50px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.95); 
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 800px;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
+            border-radius: 10px;
+            animation: zoom 0.4s;
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: var(--neon-cyan);
+            padding: 20px 0;
+            font-family: var(--font-tech);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close:hover { color: var(--neon-cyan); }
+
+        @keyframes zoom {
+            from {transform:scale(0)} 
+            to {transform:scale(1)}
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="network-bg"></canvas>
+    <div class="grid-overlay"></div>
+
+    <nav>
+        <div class="nav-logo">[SYSTEM.ROOT_DEV]</div>
+        <div class="nav-links">
+            <ul>
+                <li><a href="#hero" class="active">/HOME</a></li>
+                <li><a href="#career">/TECH.SKILLS</a></li>
+                <li><a href="#education">/EDUCATION</a></li>
+                <li><a href="#certificates">/CERTIFICATES</a></li>
+                <li><a href="#contact">/CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="hero" class="container">
+        <div class="hero-content">
+            <p class="subtitle">> INITIALIZING PORTFOLIO MODULE...</p>
+            <h1>HELLO, I'M <span class="highlight">DEV_SHARMA</h1>
+            <h2 style="color: var(--text-secondary);">COMPUTER ENGINEERING STUDENT</h2>
+            <p style="margin-top: 20px; max-width: 500px; color: var(--text-secondary);">A highly driven BCA student with 20+ technical badges in cloud computing, cybersecurity, and AI. Experienced in building AI agents and vision models, I thrive in fast-paced environments that value innovation, technical agility, and excellence. Eager to apply my skills to real-world challenges</p>
+            <div style="margin-top: 40px;">
+                <a href="#contact" class="btn-tech">INITIATE CONTACT</a>
+            </div>
+        </div>
+
+        <div class="model-wrapper">
+            <div class="cube">
+                <div class="face-front cube-face">CPU</div>
+                <div class="face-back cube-face">RAM</div>
+                <div class="face-right cube-face">I/O</div>
+                <div class="face-left cube-face">GPU</div>
+                <div class="face-top cube-face">NETWORK</div>
+                <div class="face-bottom cube-face">security</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="career" class="container hidden-section">
+        <h2 class="section-title">TECH.Skills</h2>
+        <div class="grid-2">
+            <div class="holo-card">
+                <h3>Technical Skills Interface</h3>
+                 <div style="margin-top: 20px;">
+                    <h4 style="color: var(--neon-blue)">Programming Languages</h4>
+                    <div class="skill-tags">
+                        <span class="tech-tag">C++</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">AI/ML</span>
+                        <span class="tech-tag"> Web Developer</span>
+                        <span class="tech-tag"> MySQL</span>
+                        <span class="tech-tag"> React</span>
+
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4 style="color: var(--neon-blue)">Engineering Tools</h4>
+                    <div class="skill-tags">
+                        <span class="tech-tag">visual studio code</span>
+                        <span class="tech-tag">Linux OS</span>
+                        <span class="tech-tag">MySQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="container hidden-section">
+        <h2 class="section-title">ACADEMIC DATA</h2>
+        <div class="holo-card">
+            <div class="grid-2" style="align-items: center;">
+                <div>
+                    <h3 style="color: var(--neon-cyan); font-size: 1.8rem;">Bachelor of Computer Application</h3>
+                    <h4 style="margin-top: 10px;">[Institute of Information Technology and Management (IITM)]</h4>
+                    <p style="color: var(--text-secondary); margin-top: 5px;">Expected Graduation:[2027]</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--neon-blue)">Relevant Coursework Module:</h4>
+                    <ul style="list-style: none; margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <li>>Data Structures & Algos</li>
+                        <li>>Internet Technologies and Applications</li>
+                        <li>>computer fundamentals</li>
+                        <li>>Databases</li>
+                        <li>>AI and machine learning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section id="certificates" class="container hidden-section">
+        <h2 class="section-title">VERIFIED CERTIFICATES</h2>
+        
+        <div class="slider-container">
+            
+            <button class="slider-btn prev-btn" id="prevBtn">&#10094;</button>
+
+            <div class="slider-track" id="sliderTrack">
+                
+                <div class="holo-card cert-card">
+                    <img src="ai agents.png" alt="ai agents" class="cert-img">
+                    <h3>Generative AI & Agents</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Fundamental understanding to generative AI and agents.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="delta.png" alt="cloud" class="cert-img">
+                    <h3>Cloud Infrastructure</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Introduction to Cloud Infrastructure: Describe cloud concepts.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="11.png" alt="AI fund" class="cert-img">
+                    <h3>AZURE AI Fundamentals</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Fundamentals to Artificial Intelligence.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="Microsoft-1.png" alt="AI fund" class="cert-img">
+                    <h3>Analyze Images</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Analyze Images.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="data analysis-1.png" alt="AI fund" class="cert-img">
+                    <h3>Data Analysis</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Data Analysis.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="12.png" alt="AI fund" class="cert-img">
+                    <h3>Microsoft Copilot studio</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Microsoft Copilot studio.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="copilot-1.png" alt="AI fund" class="cert-img">
+                    <h3>Copilot Foundations</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Copilot Foundations.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="cloud computing-1.png" alt="AI fund" class="cert-img">
+                    <h3>Cloud Computing</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Cloud Computing.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="canvas app-1.png" alt="AI fund" class="cert-img">
+                    <h3>canvas apps in Power Apps </h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">canvas apps in Power Apps.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="dataverse-1.png" alt="AI fund" class="cert-img">
+                    <h3>Use Dataverse choice columns with formulas </h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Use Dataverse choice columns with formulas.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="table-1.png" alt="AI fund" class="cert-img">
+                    <h3>Create and manage columns within a table in Dataverse </h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Create and manage columns within a table in Dataverse.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="ai application-1.png" alt="AI fund" class="cert-img">
+                    <h3>Develop a vision-enabled generative AI application </h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Develop a vision-enabled generative AI application.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="GitHub  se-1.png" alt="AI fund" class="cert-img">
+                    <h3>Introduction to GitHub Advanced Security</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Introduction to GitHub Advanced Security.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="classify images-1.png" alt="AI fund" class="cert-img">
+                    <h3>Classify images</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Classify images.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="cloud services-1.png" alt="AI fund" class="cert-img">
+                    <h3>Describe cloud service types</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Describe cloud service types.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="power app-1.png" alt="AI fund" class="cert-img">
+                    <h3>Perform custom updates in a Power Apps canvas app</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Perform custom updates in a Power Apps canvas app.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="codeql-1.png" alt="AI fund" class="cert-img">
+                    <h3>Identify security vulnerabilities in your codebase by using CodeQL</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Identify security vulnerabilities in your codebase by using CodeQL.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="object-1.png" alt="AI fund" class="cert-img">
+                    <h3>Detect objects in images</h3>
+                    <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Detect objects in images.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="alpha.png" alt="coding ai" class="cert-img">
+                    <h3>Coding to Build AI Agents</h3>
+                    <a href="https://www.analyticsvidhya.com/courses/?utm_source=new_course_home_page" class="tech-tag" style="text-decoration: none;">ANALYTICS VIDHYA</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">A B C of Coding to Build AI Agents.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="gama.png" alt="great learning" class="cert-img">
+                    <h3>AI Fundamentals</h3>
+                    <a href="https://olympus.mygreatlearning.com/certificates?pb_id=581" class="tech-tag" style="text-decoration: none;">GREAT LEARNING</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Fundamentals to Artificial Intelligence.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="beta.png" alt="cybersecurity" class="cert-img">
+                    <h3>Cybersecurity Fundamentals</h3>
+                    <a href="https://students.yourlearning.ibm.com/profile/preference" class="tech-tag" style="text-decoration: none;">IBM SKILLS BUILD</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Introduction to Cybersecurity.</p>
+                </div> 
+            </div>
+            </div> 
+            </div>
+            <button class="slider-btn next-btn" id="nextBtn">&#10095;</button>
+        </div>
+    </section>
+
+    <section id="additional" class="container hidden-section">
+        <h2 class="section-title">ADDITIONAL PARAMETERS</h2>
+        <div class="grid-2">
+            <div class="holo-card">
+                <h3>Soft Skills Protocol</h3>
+            <ul style="list-style: none; margin-top: 15px; line-height: 1.8;">
+                    <li>>Communication skills </li>
+                    <li>> Cross-functional Team Collaboration</li>
+                    <li>> Complex Problem Solving Methodology</li>
+                    <li>> Agile/Scrum Workflow Familiarity</li>
+                </ul>
+            </div>
+            <div class="holo-card">
+                <h3>Offline Interests</h3>
+                <p style="margin-top: 15px;">I also explore digital arts and concept design, which helps me bring a creative perspective to my technical projects,i love play gaming, and participating in local hackathons.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="container hidden-section" style="margin-bottom: 50px;">
+        <h2 class="section-title">ESTABLISH UPLINK</h2>
+        <div class="grid-2">
+            <div class="holo-card">
+                <h3>Transmission Form</h3>
+                <form class="contact-form" style="margin-top: 20px;" action="https://formspree.io/f/xpwvrlkk" method="POST">
+    <div class="form-group">
+        <input type="text" name="name" placeholder="ENTER SENDER NAME" required>
+    </div>
+    <div class="form-group">
+        <input type="email" name="email" placeholder="ENTER RETURN ADDRESS (EMAIL)" required>
+    </div>
+    <div class="form-group">
+        <textarea name="message" rows="5" placeholder="ENTER MESSAGE DATA..." required></textarea>
+    </div>
+    <button type="submit" class="btn-tech">TRANSMIT DATA</button>
+</form>
+                <   </div>
+
+            <div class="holo-card" style="display: flex; flex-direction: column; justify-content: center;">
+                <h3>Direct Line Coordinates</h3>
+                <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 20px;">
+                    <div>
+                        <h4 style="color: var(--neon-blue)">Email Protocol:</h4>
+                        <p style="font-family: var(--font-tech); font-size: 1.1rem;">shramadev3476@gmail.com</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--neon-blue)">Voice Link:</h4>
+                        <p style="font-family: var(--font-tech); font-size: 1.1rem;">+91 8375033476</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--neon-blue)">Network Nodes:</h4>
+                        <div style="margin-top: 10px; display: flex; gap: 15px;">
+                            <a href="www.linkedin.com/in/dev-sharma-8a2b83311" class="tech-tag" style="text-decoration: none;">LinkedIn</a>
+                            <a href="https://github.com/Sharmadev005" class="tech-tag" style="text-decoration: none;">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>[ SYSTEM TERMINATED 🤗 ]</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">© 2025 DEV SHARMA.</p>
+    </footer>
+
+    <div id="certModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+
+    <script>
+       
+        const canvas = document.getElementById('network-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+       
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+       
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#00f3ff';
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
+                if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000; 
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 0.4) - 0.2;
+                let directionY = (Math.random() * 0.4) - 0.2;
+                let color = '#00f3ff';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+    
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                        + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = 'rgba(0, 243, 255,' + opacityValue + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        init();
+        animate();
+
+
+        
+        const hiddenSections = document.querySelectorAll('.hidden-section');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible-section');
+                }
+            });
+        });
+
+        hiddenSections.forEach((section) => {
+            observer.observe(section);
+        });
+
+
+    
+        const sections = document.querySelectorAll("section");
+        const navLi = document.querySelectorAll("nav .nav-links ul li a");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLi.forEach((a) => {
+                a.classList.remove("active");
+                if (a.classList.contains(current)) {
+                    a.classList.add("active");
+                }
+            });
+        });
+
+    
+        const track = document.getElementById('sliderTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        const cards = document.querySelectorAll('.slider-track .cert-card');
+
+        let currentIndex = 0;
+
+        function getCardsPerView() {
+            if (window.innerWidth >= 1024) return 3; 
+            if (window.innerWidth >= 768) return 2;  
+            return 1;                               
+        }
+
+        function updateSlider() {
+            const cardsPerView = getCardsPerView();
+            const cardWidth = cards[0].offsetWidth; 
+            const gap = 20; 
+            
+            const moveAmount = (cardWidth + gap) * currentIndex;
+            track.style.transform = `translateX(-${moveAmount}px)`;
+            
+        
+            const maxIndex = cards.length - cardsPerView;
+            
+            
+            prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
+            prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+            
+        
+            nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+            nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            const cardsPerView = getCardsPerView();
+            const maxIndex = cards.length - cardsPerView;
+            
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        });
+
+
+        window.addEventListener('resize', () => {
+            currentIndex = 0; 
+            updateSlider();
+        });
+
+
+        setTimeout(updateSlider, 100);
+
+        const modal = document.getElementById("certModal");
+        const modalImg = document.getElementById("img01");
+        const captionText = document.getElementById("caption");
+        const span = document.getElementsByClassName("close")[0];
+
+        
+        const certImages = document.querySelectorAll('.cert-img');
+
+    
+        certImages.forEach(img => {
+            img.addEventListener('click', function() {
+                modal.style.display = "flex";
+                modal.style.flexDirection = "column";
+                modal.style.justifyContent = "center";
+                modal.style.alignItems = "center";
+                
+                modalImg.src = this.src; 
+                const title = this.nextElementSibling ? this.nextElementSibling.innerText : "CERTIFICATE";
+                captionText.innerHTML = title;
+            });
+        });
+        span.onclick = function() { 
+        modal.style.display = "none";
+        }
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    
+        let autoPlayInterval;
+        const sliderContainer = document.querySelector('.slider-container');
+
+        function startAutoPlay() {
+    
+            clearInterval(autoPlayInterval);
+            
+            autoPlayInterval = setInterval(() => {
+                const cardsPerView = getCardsPerView();
+                const maxIndex = cards.length - cardsPerView;
+
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0; 
+                }
+                updateSlider();
+            }, 900); // Speed: 3000ms = 3 seconds
+        }
+
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        
+        sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+
+        
+        sliderContainer.addEventListener('mouseleave', startAutoPlay);
+
+        
+        startAutoPlay();
+    </script>
+</body>
+</html>
