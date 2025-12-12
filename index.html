@@ -599,7 +599,7 @@ canvas#network-bg {
 .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* MOBILE RESPONSIVE STYLES */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
     /* Show Hamburger */
     .hamburger { display: flex; }
 
@@ -653,7 +653,7 @@ canvas#network-bg {
     gap: 30px; 
 }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1150px) {
     #hero {
         flex-direction: column-reverse; /* Cube on top, text on bottom */
         text-align: center;
@@ -1158,8 +1158,8 @@ canvas#network-bg {
     let currentIndex = 0;
 
     function getCardsPerView() {
-        if (window.innerWidth >= 1024) return 3;
-        if (window.innerWidth >= 768) return 2;
+        if (window.innerWidth >= 1200) return 3;
+        if (window.innerWidth >= 800) return 2;
         return 1;
     }
 
@@ -1309,6 +1309,7 @@ document.querySelectorAll(".nav-links a").forEach(n => n.addEventListener("click
 </script>
 </body>
 </html>
+
 
 
 
