@@ -127,23 +127,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
+            padding: 20px 20px;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 100;
             background: rgba(2, 2, 5, 0.8);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(1px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.1);
         }
+.nav-avatar {
+    width: 50px;       
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-cyan);
+    object-fit: cover;
+    box-shadow: 0 0 10px var(--neon-cyan);
+    transition: 0.3s;
+}
 
-        .nav-logo {
-            font-family: var(--font-tech);
-            color: var(--neon-cyan);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
+.nav-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
 
+.nav-logo {
+    font-family: var(--font-tech);
+    color: var(--neon-cyan);
+    font-weight: 600;
+    font-size: 1.5rem;
+    
+    
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
         .nav-links ul {
             display: flex;
             list-style: none;
@@ -189,7 +208,6 @@
             font-size: 1.5rem;
             color: var(--text-secondary);
             margin-bottom: 30px;
-            /*font-family: var(--font-tech);*/
             font-family: Cascadia Code, monospace;
             color: rgb(232, 241, 231);
         }
@@ -318,7 +336,6 @@
             .face-bottom { transform: rotateX(-90deg) translateZ(75px); }
         }
 
-        /* --- SLIDER STYLES --- */
         .slider-container {
             position: relative;
             width: 100%;
@@ -435,6 +452,124 @@
             from {transform:scale(0)} 
             to {transform:scale(1)}
         }
+
+.dynamic-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(2, 36, 128, 0.925);
+    z-index: -20;
+    
+    background-image: url('rani 1.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-color: #00a2ff;
+    
+   
+    animation: breathe 20s infinite alternate ease-in-out;
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.50); 
+    }
+}
+
+
+body {
+    background-color: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+}
+
+canvas#network-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -2;
+    background: rgba(0, 0, 0, 0.7); 
+}
+
+#start-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #020205; 
+    z-index: 9999; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.5s ease-out;
+}
+
+.overlay-content {
+    text-align: center;
+    font-family: var(--font-tech);
+    color: var(--neon-cyan);
+}
+
+.overlay-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--neon-cyan);
+}
+
+#audio-control {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border: 1px solid var(--neon-cyan);
+    background: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    font-family: var(--font-tech);
+    color: var(--text-secondary);
+    transition: 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+#audio-control:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    color: var(--neon-cyan);
+}
+
+
+.equalizer {
+    display: flex;
+    gap: 3px;
+    height: 15px;
+    align-items: flex-end;
+}
+
+.bar {
+    width: 3px;
+    background-color: var(--neon-cyan);
+    height: 3px;
+    transition: 0.2s;
+}
+
+
+.playing .bar {
+    animation: bounce 1s infinite ease-in-out;
+}
+.playing .bar:nth-child(2) { animation-delay: 0.2s; }
+.playing .bar:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+    0%, 100% { height: 3px; }
+    50% { height: 15px; }
+}
     </style>
 </head>
 <body>
@@ -443,7 +578,8 @@
     <div class="grid-overlay"></div>
 
     <nav>
-        <div class="nav-logo">[SYSTEM.ROOT_DEV]</div>
+      <img src="my-profile.jpeg" alt="Profile" class="nav-avatar">
+<div class="nav-logo">[ॐ.ROOT_DEV]</div>
         <div class="nav-links">
             <ul>
                 <li><a href="#hero" class="active">/HOME</a></li>
@@ -541,27 +677,7 @@
             <button class="slider-btn prev-btn" id="prevBtn">&#10094;</button>
 
             <div class="slider-track" id="sliderTrack">
-
-                 <div class="holo-card cert-card">
-                    <img src="alpha.png" alt="coding ai" class="cert-img">
-                    <h3>Coding to Build AI Agents</h3>
-                    <a href="https://www.analyticsvidhya.com/courses/?utm_source=new_course_home_page" class="tech-tag" style="text-decoration: none;">ANALYTICS VIDHYA</a>
-                    <p style="margin-top: 10px; font-size: 0.9rem;">A B C of Coding to Build AI Agents.</p>
-                </div>
                 
-                <div class="holo-card cert-card">
-                    <img src="gama.png" alt="great learning" class="cert-img">
-                    <h3>AI Fundamentals</h3>
-                    <a href="https://olympus.mygreatlearning.com/certificates?pb_id=581" class="tech-tag" style="text-decoration: none;">GREAT LEARNING</a>
-                    <p style="margin-top: 10px; font-size: 0.9rem;">Fundamentals to Artificial Intelligence.</p>
-                </div>
-
-                <div class="holo-card cert-card">
-                    <img src="beta.png" alt="cybersecurity" class="cert-img">
-                    <h3>Cybersecurity Fundamentals</h3>
-                    <a href="https://students.yourlearning.ibm.com/profile/preference" class="tech-tag" style="text-decoration: none;">IBM SKILLS BUILD</a>
-                    <p style="margin-top: 10px; font-size: 0.9rem;">Introduction to Cybersecurity.</p>
-                </div> 
                 <div class="holo-card cert-card">
                     <img src="ai agents.png" alt="ai agents" class="cert-img">
                     <h3>Generative AI & Agents</h3>
@@ -687,6 +803,29 @@
                     <a href="https://learn.microsoft.com/en-in/users/devsharma-2136/" class="tech-tag" style="text-decoration: none;">MICROSOFT</a>
                     <p style="margin-top: 10px; font-size: 0.9rem;">Detect objects in images.</p>
                 </div>
+
+                <div class="holo-card cert-card">
+                    <img src="alpha.png" alt="coding ai" class="cert-img">
+                    <h3>Coding to Build AI Agents</h3>
+                    <a href="https://www.analyticsvidhya.com/courses/?utm_source=new_course_home_page" class="tech-tag" style="text-decoration: none;">ANALYTICS VIDHYA</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">A B C of Coding to Build AI Agents.</p>
+                </div>
+                
+                <div class="holo-card cert-card">
+                    <img src="gama.png" alt="great learning" class="cert-img">
+                    <h3>AI Fundamentals</h3>
+                    <a href="https://olympus.mygreatlearning.com/certificates?pb_id=581" class="tech-tag" style="text-decoration: none;">GREAT LEARNING</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Fundamentals to Artificial Intelligence.</p>
+                </div>
+
+                <div class="holo-card cert-card">
+                    <img src="beta.png" alt="cybersecurity" class="cert-img">
+                    <h3>Cybersecurity Fundamentals</h3>
+                    <a href="https://students.yourlearning.ibm.com/profile/preference" class="tech-tag" style="text-decoration: none;">IBM SKILLS BUILD</a>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Introduction to Cybersecurity.</p>
+                </div> 
+            </div>
+            </div> 
             </div>
             <button class="slider-btn next-btn" id="nextBtn">&#10095;</button>
         </div>
@@ -728,7 +867,7 @@
     </div>
     <button type="submit" class="btn-tech">TRANSMIT DATA</button>
 </form>
-            </div>
+                <   </div>
 
             <div class="holo-card" style="display: flex; flex-direction: column; justify-content: center;">
                 <h3>Direct Line Coordinates</h3>
@@ -754,7 +893,7 @@
     </section>
 
     <footer>
-        <p>[ SYSTEM TERMINATED 🤗 ]</p>
+        <p>[। ॐ करणां वदनां धोरां मुक्तकेशी चतुर्भुजाम् । कालिंकां दक्षिणां दिव्यां मुण्डमाला विभूषिताम्॥ शरणागत-दीनार्त-परित्राण-परायणे, सर्वस्यार्तिहरे देवि! नारायणि! नमोस्तुते ।]</p>
         <p style="margin-top: 10px; font-size: 0.8rem;">© 2025 DEV SHARMA.</p>
     </footer>
 
@@ -764,6 +903,22 @@
         <div id="caption"></div>
     </div>
 
+    <div class="dynamic-bg"></div>
+    <audio id="startupAudio" src="kali ma.mp3"></audio>
+
+<audio id="techAudio" loop>
+    <source src="audio/Kali maa.mp3" type="audio/mpeg">
+</audio>
+
+<div id="audio-control" onclick="toggleAudio()">
+    <div class="equalizer">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+    <span id="audio-text">AUDIO: OFF</span>
+</div>
+</div>
     <script>
        
         const canvas = document.getElementById('network-bg');
@@ -998,8 +1153,7 @@
                     currentIndex = 0; 
                 }
                 updateSlider();
-            }, 3000); // Speed: 3000ms = 3 seconds
-        }
+            }, 3000);
 
         function stopAutoPlay() {
             clearInterval(autoPlayInterval);
@@ -1012,10 +1166,52 @@
         sliderContainer.addEventListener('mouseleave', startAutoPlay);
 
         
-        startAutoPlay();
+        startAutoPlay();}
+
+        const audio = document.getElementById('techAudio');
+const audioBtn = document.getElementById('audio-control');
+const audioText = document.getElementById('audio-text');
+
+function toggleAudio() {
+    if (audio.paused) {
+       
+        audio.play().then(() => {
+            
+            audioBtn.classList.add('playing');
+            audioText.innerText = "AUDIO: ON";
+            audioText.style.color = "var(--neon-cyan)";
+        }).catch(error => {
+            console.log("Audio play blocked: Interaction required first.");
+        });
+    } else {
+       
+        audio.pause();
+        audioBtn.classList.remove('playing');
+        audioText.innerText = "AUDIO: PAUSED";
+        audioText.style.color = "var(--text-secondary)";
+    }
+}
+
+
+window.addEventListener('load', () => {
+    audio.volume = 0.5; 
+})
+<script>
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert("© 2025 Dev Sharma. All Rights Reserved.");
+  });
+
+  document.onkeydown = function(e) {
+   
+    if (e.keyCode == 123 || 
+       (e.ctrlKey && e.keyCode == 85) || 
+       (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+      return false;
+    }
+  };
+</script>
     </script>
 </body>
-
 </html>
-
 
