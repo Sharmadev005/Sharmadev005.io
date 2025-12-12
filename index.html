@@ -663,7 +663,72 @@ canvas#network-bg {
     .hero-content p {
         padding: 0 15px;
     }
-}  
+}
+
+/* --- FIX FOR HUGE SLIDES & UNSTABLE ARROWS (MOBILE ONLY) --- */
+@media (max-width: 768px) {
+    
+    /* 1. COMPACT CARD SIZE */
+    .slider-track .cert-card {
+        padding: 15px 10px !important; /* Tighter padding */
+        min-height: 260px; /* Reduced from 350px to 260px */
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Align to top instead of center */
+        align-items: center;
+    }
+
+    /* 2. SHRINK THE IMAGE SIGNIFICANTLY */
+    .cert-img {
+        max-height: 110px; /* Reduced from 160px to 110px */
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+
+    /* 3. SHRINK TEXT SIZES */
+    .cert-card h3 {
+        font-size: 1.1rem !important; /* Smaller title */
+        margin-bottom: 5px;
+        line-height: 1.2;
+    }
+    
+    .cert-card p {
+        font-size: 0.8rem !important; /* Smaller description */
+        line-height: 1.2;
+        margin-top: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limit text to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Shrink the button inside the card */
+    .cert-card .tech-tag {
+        font-size: 0.7rem !important;
+        padding: 4px 10px;
+    }
+
+    /* 4. STABILIZE ARROWS (Make them smaller too) */
+    .slider-btn {
+        width: 35px;       /* Smaller button */
+        height: 35px;      
+        font-size: 1.2rem; /* Smaller arrow icon */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #020205; /* Solid black background */
+        border: 1px solid var(--neon-cyan);
+        opacity: 0.8 !important; 
+        z-index: 50;
+    }
+    
+    .prev-btn { left: 0px; }  /* Stick to edge */
+    .next-btn { right: 0px; } /* Stick to edge */
+}
+
     </style>
 </head>
 <body>
