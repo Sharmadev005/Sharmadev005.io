@@ -907,7 +907,7 @@ canvas#network-bg {
     <audio id="startupAudio" src="kali maa.mp3"></audio>
 
 <audio id="techAudio" loop>
-    <source src="audio/Kali maa.mp3" type="audio/mpeg">
+    <source src="./kali maa.mp3" type="audio/mpeg">
 </audio>
 
 <div id="audio-control" onclick="toggleAudio()">
@@ -1045,175 +1045,153 @@ canvas#network-bg {
             });
         });
 
-    
-        const track = document.getElementById('sliderTrack');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+        // ... (Keep your canvas/particle code as is) ...
 
-        const cards = document.querySelectorAll('.slider-track .cert-card');
+    // --- SLIDER LOGIC FIXED ---
+    const track = document.getElementById('sliderTrack');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const cards = document.querySelectorAll('.slider-track .cert-card');
+    let currentIndex = 0;
 
-        let currentIndex = 0;
+    function getCardsPerView() {
+        if (window.innerWidth >= 1024) return 3;
+        if (window.innerWidth >= 768) return 2;
+        return 1;
+    }
 
-        function getCardsPerView() {
-            if (window.innerWidth >= 1024) return 3; 
-            if (window.innerWidth >= 768) return 2;  
-            return 1;                               
-        }
-
-        function updateSlider() {
-            const cardsPerView = getCardsPerView();
-            const cardWidth = cards[0].offsetWidth; 
-            const gap = 20; 
-            
-            const moveAmount = (cardWidth + gap) * currentIndex;
-            track.style.transform = `translateX(-${moveAmount}px)`;
-            
+    function updateSlider() {
+        const cardsPerView = getCardsPerView();
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 20;
+        const moveAmount = (cardWidth + gap) * currentIndex;
+        track.style.transform = `translateX(-${moveAmount}px)`;
         
-            const maxIndex = cards.length - cardsPerView;
-            
-            
-            prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
-            prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
-            
-        
-            nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
-            nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
-        }
+        const maxIndex = cards.length - cardsPerView;
+        prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
+        prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+        nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+        nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
+    }
 
-        nextBtn.addEventListener('click', () => {
+    nextBtn.addEventListener('click', () => {
+        const cardsPerView = getCardsPerView();
+        const maxIndex = cards.length - cardsPerView;
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateSlider();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateSlider();
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        currentIndex = 0;
+        updateSlider();
+    });
+
+    setTimeout(updateSlider, 100);
+
+    // --- AUTOPLAY LOGIC FIXED ---
+    let autoPlayInterval;
+    const sliderContainer = document.querySelector('.slider-container');
+
+    function startAutoPlay() {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = setInterval(() => {
             const cardsPerView = getCardsPerView();
             const maxIndex = cards.length - cardsPerView;
-            
             if (currentIndex < maxIndex) {
                 currentIndex++;
-                updateSlider();
+            } else {
+                currentIndex = 0;
             }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateSlider();
-            }
-        });
-
-
-        window.addEventListener('resize', () => {
-            currentIndex = 0; 
             updateSlider();
+        }, 3000);
+    } // <--- THIS BRACKET WAS MISSING IN YOUR CODE
+
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+    }
+
+    sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+    sliderContainer.addEventListener('mouseleave', startAutoPlay);
+    startAutoPlay();
+
+
+    // --- MODAL LOGIC ---
+    const modal = document.getElementById("certModal");
+    const modalImg = document.getElementById("img01");
+    const captionText = document.getElementById("caption");
+    const span = document.getElementsByClassName("close")[0];
+    const certImages = document.querySelectorAll('.cert-img');
+
+    certImages.forEach(img => {
+        img.addEventListener('click', function() {
+            modal.style.display = "flex";
+            modal.style.flexDirection = "column";
+            modal.style.justifyContent = "center";
+            modal.style.alignItems = "center";
+            modalImg.src = this.src;
+            const title = this.nextElementSibling ? this.nextElementSibling.innerText : "CERTIFICATE";
+            captionText.innerHTML = title;
         });
+    });
+
+    span.onclick = function() { modal.style.display = "none"; }
+    modal.onclick = function(event) {
+        if (event.target === modal) { modal.style.display = "none"; }
+    }
 
 
-        setTimeout(updateSlider, 100);
+    // --- AUDIO LOGIC (NOW REACHABLE) ---
+    const audio = document.getElementById('techAudio');
+    const audioBtn = document.getElementById('audio-control');
+    const audioText = document.getElementById('audio-text');
 
-        const modal = document.getElementById("certModal");
-        const modalImg = document.getElementById("img01");
-        const captionText = document.getElementById("caption");
-        const span = document.getElementsByClassName("close")[0];
-
-        
-        const certImages = document.querySelectorAll('.cert-img');
-
-    
-        certImages.forEach(img => {
-            img.addEventListener('click', function() {
-                modal.style.display = "flex";
-                modal.style.flexDirection = "column";
-                modal.style.justifyContent = "center";
-                modal.style.alignItems = "center";
-                
-                modalImg.src = this.src; 
-                const title = this.nextElementSibling ? this.nextElementSibling.innerText : "CERTIFICATE";
-                captionText.innerHTML = title;
+    function toggleAudio() {
+        if (audio.paused) {
+            audio.play().then(() => {
+                audioBtn.classList.add('playing');
+                audioText.innerText = "AUDIO: ON";
+                audioText.style.color = "var(--neon-cyan)";
+            }).catch(error => {
+                console.log("Audio playback failed:", error);
+                alert("Please click the page first to enable audio!");
             });
-        });
-        span.onclick = function() { 
-        modal.style.display = "none";
+        } else {
+            audio.pause();
+            audioBtn.classList.remove('playing');
+            audioText.innerText = "AUDIO: PAUSED";
+            audioText.style.color = "var(--text-secondary)";
         }
-        modal.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
-    
-        let autoPlayInterval;
-        const sliderContainer = document.querySelector('.slider-container');
-
-        function startAutoPlay() {
-    
-            clearInterval(autoPlayInterval);
-            
-            autoPlayInterval = setInterval(() => {
-                const cardsPerView = getCardsPerView();
-                const maxIndex = cards.length - cardsPerView;
-
-                if (currentIndex < maxIndex) {
-                    currentIndex++;
-                } else {
-                    currentIndex = 0; 
-                }
-                updateSlider();
-            }, 3000);
-
-        function stopAutoPlay() {
-            clearInterval(autoPlayInterval);
-        }
-
-        
-        sliderContainer.addEventListener('mouseenter', stopAutoPlay);
-
-        
-        sliderContainer.addEventListener('mouseleave', startAutoPlay);
-
-        
-        startAutoPlay();}
-
-        const audio = document.getElementById('techAudio');
-const audioBtn = document.getElementById('audio-control');
-const audioText = document.getElementById('audio-text');
-
-function toggleAudio() {
-    if (audio.paused) {
-       
-        audio.play().then(() => {
-            
-            audioBtn.classList.add('playing');
-            audioText.innerText = "AUDIO: ON";
-            audioText.style.color = "var(--neon-cyan)";
-        }).catch(error => {
-            console.log("Audio play blocked: Interaction required first.");
-        });
-    } else {
-       
-        audio.pause();
-        audioBtn.classList.remove('playing');
-        audioText.innerText = "AUDIO: PAUSED";
-        audioText.style.color = "var(--text-secondary)";
     }
-}
 
+    window.addEventListener('load', () => {
+        audio.volume = 0.5;
+    });
 
-window.addEventListener('load', () => {
-    audio.volume = 0.5; 
-})
-<script>
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert("© 2025 Dev Sharma. All Rights Reserved.");
-  });
+    // --- DISABLE RIGHT CLICK ---
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert("© 2025 Dev Sharma. All Rights Reserved.");
+    });
 
-  document.onkeydown = function(e) {
-   
-    if (e.keyCode == 123 || 
-       (e.ctrlKey && e.keyCode == 85) || 
-       (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-      return false;
-    }
-  };
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.keyCode == 85) || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+            return false;
+        }
+    };
 </script>
     </script>
 </body>
 </html>
+
 
 
 
