@@ -7,10 +7,7 @@
     <title>DEV_SHARMA</title>
     <link rel="icon" href="Dev.jpg" type="image/x-icon">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
+   
     <style>
         :root {
             --bg-color: #020205;
@@ -728,7 +725,17 @@ canvas#network-bg {
     .prev-btn { left: 0px; }  /* Stick to edge */
     .next-btn { right: 0px; } /* Stick to edge */
 }
+.slider-container {
+    touch-action: pan-y; /* Allows vertical scrolling but intercepts horizontal swipes */
+}
 
+.slider-track {
+    cursor: grab;
+}
+
+.slider-track:active {
+    cursor: grabbing;
+}
     </style>
 </head>
 <body>
@@ -1216,12 +1223,16 @@ canvas#network-bg {
 
         // ... (Keep your canvas/particle code as is) ...
 
-    // --- SLIDER LOGIC FIXED ---
+    // --- SLIDER LOGIC WITH TOUCH SUPPORT ---
     const track = document.getElementById('sliderTrack');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const cards = document.querySelectorAll('.slider-track .cert-card');
     let currentIndex = 0;
+
+    // Touch Support Variables
+    let touchStartX = 0;
+    let touchEndX = 0;
 
     function getCardsPerView() {
         if (window.innerWidth >= 1200) return 3;
@@ -1243,6 +1254,37 @@ canvas#network-bg {
         nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
     }
 
+    // Touch Event Handlers
+    track.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // Minimum distance to be considered a swipe
+        const cardsPerView = getCardsPerView();
+        const maxIndex = cards.length - cardsPerView;
+
+        if (touchStartX - touchEndX > swipeThreshold) {
+            // Swiped Left -> Go Next
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            // Swiped Right -> Go Prev
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        }
+    }
+
+    // Existing Button Logic
     nextBtn.addEventListener('click', () => {
         const cardsPerView = getCardsPerView();
         const maxIndex = cards.length - cardsPerView;
@@ -1371,9 +1413,9 @@ document.querySelectorAll(".nav-links a").forEach(n => n.addEventListener("click
     hamburger.classList.remove("active");
     navMenu.classList.remove("active");
 }));
+
         
 </script>
 </body>
 </html>
-
 
